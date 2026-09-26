@@ -1,6 +1,6 @@
 {
   "name": "dsh-minesweeper",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "DSH 扫雷：右侧栏标签里的经典扫雷。首点安全 / 插旗 / 和弦 / 三档+自定义网格；v0.5 起成绩经 host 侧文件持久化（跨浏览器/上下文共享）+ 设置卡片（默认标记模式）。",
   "keywords": [
     "dsh",

@@ -221,4 +221,14 @@ body[data-ds-dark-theme] .msw-root{ --msw-floor: rgba(255,255,255,0.06); }
   left:calc(100% - 14px);
   background:var(--dsw-alias-bg-base);
 }
+
+/* Responsive, keyboard-accessible workspace surfaces. */
+
+.msw-root {min-width:0; gap:14px; padding:16px; line-height:1.5;}
+.msw-root *, .msw-root *::before, .msw-root *::after {box-sizing:border-box;}
+.msw-root :is(button,input,select):focus-visible {outline:2px solid var(--dsw-alias-link); outline-offset:2px;}
+.msw-root :is(select,input) {max-width:100%; min-width:0; min-height:34px;}
+.msw-root .msw-btn {min-height:34px;}
+@media(prefers-reduced-motion:reduce) {.msw-root * {animation:none;transition:none;}}
+
 `;

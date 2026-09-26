@@ -40,7 +40,7 @@ window.__ModuleLoader__?.load({
     // + settingsScope（设置卡片读写命名空间，缺失时卡片降级只读提示）。
     // 0.1.7：settingsScope 服务已移除；设置卡片改走插件自有 REST API（settings-api.ts）。
     pluginExports.inject = ["slots", "sidebarRightTabs"];
-    pluginExports.VERSION = "0.5.2";
+    pluginExports.VERSION = "0.5.3";
 
     pluginExports.apply = function apply(ctx: any): void {
       const get = (k: string) => (ctx && typeof ctx.get === "function" ? ctx.get(k) : undefined);

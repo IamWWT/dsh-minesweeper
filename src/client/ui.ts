@@ -365,7 +365,7 @@ export function createGameUI(R: any): GameUI {
         "div",
         { className: "msw-title" },
         h("h1", null, "扫雷"),
-        h("span", { className: "msw-badge" }, `dsh-minesweeper v0.5.2`),
+        h("span", { className: "msw-badge" }, `dsh-minesweeper v0.5.3`),
       ),
       h(
         "div",

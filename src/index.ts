@@ -20,7 +20,7 @@ export const name = "minesweeper";
 export const inject = ["webServer", "settings"];
 
 /** 五处同步之一（package.json / 构建门禁 / README / ui.ts 徽章 / 本文件）。 */
-export const VERSION = "0.5.2";
+export const VERSION = "0.5.3";
 
 /** 设置命名空间（client 卡片注册在 `plugins.bundle.config`，key = **包名** `dsh-minesweeper`）。 */
 export const SETTINGS_NAMESPACE = "dsh-minesweeper";

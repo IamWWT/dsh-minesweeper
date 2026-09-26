@@ -1,0 +1,7 @@
+# 本插件不装 node_modules（依赖 @deepseek-ai/* 由 DSH profile 运行时提供）。
+# 此文件只用于 pnpm 的供应链/构建策略，不引入 workspace 包依赖。
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@deepseek-ai/cosmokit@1.8.5'
+  - '@deepseek-ai/schemastery@3.18.4'

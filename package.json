@@ -1,0 +1,61 @@
+{
+  "name": "dsh-minesweeper",
+  "version": "0.5.2",
+  "description": "DSH 扫雷：右侧栏标签里的经典扫雷。首点安全 / 插旗 / 和弦 / 三档+自定义网格；v0.5 起成绩经 host 侧文件持久化（跨浏览器/上下文共享）+ 设置卡片（默认标记模式）。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "minesweeper",
+    "game"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "src/",
+    "scripts/",
+    "tsconfig.json",
+    "tsconfig.client.json",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "AGENTS.md",
+    "docs/"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:notypecheck": "node scripts/build.mjs --no-typecheck",
+    "check": "node scripts/build.mjs && node test/engine-test.mjs && node test/smoke-test.mjs",
+    "typecheck": "node scripts/typecheck.mjs",
+    "test": "node test/engine-test.mjs && node test/smoke-test.mjs",
+    "pack": "npm pack",
+    "verify:installed": "node scripts/verify-installed.mjs",
+    "install:dev": "bash scripts/install-to-dsh.sh"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.0",
+    "@deepseek-ai/schemastery": ">=3.18.0 <4.0.0-0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.7.0"
+  }
+}

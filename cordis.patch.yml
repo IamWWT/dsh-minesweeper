@@ -1,0 +1,7 @@
+# dsh-minesweeper bundle patch
+#
+# v0.1 无任何可配置项：游戏逻辑 100% 客户端（引擎跑在浏览器、成绩存 localStorage），
+# host 侧无路由/无状态目录/无可调值 → 按「只声明代码实际消费的键」原则，不声明 config。
+- insert:
+  - id: minesweeper
+    name: dsh-minesweeper

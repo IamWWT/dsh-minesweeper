@@ -10,9 +10,9 @@
 | R2 | 不自动打开（D2=a） | 注册不 `openTab`；用户经右侧栏手动点入 | `src/client/entry.ts` |
 | R3 | 三档 + 自定义（D3=a） | PRESETS 三档 + `validateCustom`（行/列 5–30，雷 ≤ 格数×0.5，`isFeasible` 含首点安全余量） | `src/shared/difficulties.ts` |
 | R4 | 经典规则：首点安全/洪水/和弦/插旗/胜负 | 纯函数引擎；首点排除点+8 邻域；和弦=旗数==数字才引爆；`rng` 挂在 Board（确定性） | `src/shared/engine.ts` |
-| R5 | 成绩 localStorage（D4=a，假设项） | `dsh-minesweeper/v1/<难度id>` = `{bestMs, plays, wins}`；随难度切换换键；清空二次确认 | `src/client/ui.ts` |
+| R5 | 成绩持久化（D4=a，假设项；v0.5 起升为 host 侧文件） | 权威源 `$DSH_HOME/profiles/<profile>/dsh-minesweeper/stats.json`（`GET/PUT/DELETE /api/dsh-minesweeper/stats`）；`localStorage` `dsh-minesweeper/v1/<难度id>` = `{bestMs, plays, wins}` 为降级镜像；随难度切换换键；清空二次确认 | `src/host/state.ts`、`src/host/routes.ts`、`src/client/ui.ts` |
 | R6 | 主题 token，无硬编码色 | `css.ts` 全量 `--dsw-alias-*`/`--dsw-elevation-*`；数字 1–8 用 label/link/warn 系 token 映射 | `src/client/css.ts` |
-| R7 | host 侧 v0.1 空壳（inject=[]） | `src/index.ts` 仅 `name/inject=[]/apply/VERSION` | `src/index.ts` |
+| R7 | host 侧入口（v0.1 空壳 → v0.5 起持有成绩/设置面） | `src/index.ts`：`name` / `inject=["webServer","settings"]` / `apply`（注册 stats 路由 + settings 面）/ `VERSION` | `src/index.ts`、`src/host/routes.ts` |
 
 ## 验收对照（spec §4）
 
@@ -29,7 +29,8 @@
 
 ## 假设（记录在案）
 
-- A：成绩存 localStorage（D4 未单独提问，按推荐项处理；v0.2 可升 host 侧文件）。
+- A：成绩持久化（D4 未单独提问，按推荐项处理）：v0.1 存 localStorage，v0.5 起权威源为 host 侧
+  `$DSH_HOME/profiles/<profile>/dsh-minesweeper/stats.json`，localStorage 降级为离线镜像。
 - B：guide order=41 空闲（核对过 21/22/23/30–35 占用）。
 - C：`rng` 直调 `Math.random` 仅在 UI 层 `newBoard` 缺省参数处发生，引擎内部一律 `b.rng`。
 - D：成绩键实现为**按难度分键** `dsh-minesweeper/v1/<难度id>`（spec 原文写的单键

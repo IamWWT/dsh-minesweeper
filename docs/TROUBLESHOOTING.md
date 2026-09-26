@@ -16,7 +16,8 @@
 - **现象**：`[typecheck] tsconfig.json 失败（exit null）`，无任何 tsc 输出。
 - **根因**：build 脚本用 `loadTool("typescript/package.json")` 拿到的对象做 `String(pkg)`
   得到 `"[object Object]"`，spawn 该「路径」→ ENOENT → exit null。
-- **修复**：tsc 路径改为显式候选列表（本插件 node_modules → harness 仓库 node_modules），`existsSync` 探测。
+- **修复**：tsc 路径改为显式候选列表，`existsSync` 探测（v0.5.2 起统一收敛到 `scripts/paths.mjs`
+  的共享锚点链：env → 同级 `deepseek-harness/` → DSH profile 依赖层 + pnpm 虚拟 store）。
 - **教训**：`createRequire()` 返回的是**模块值**不是路径；要拿路径就老老实实列路径候选。
 
 ## 3. 引擎「同种子不同布局」（确定性回放失败）

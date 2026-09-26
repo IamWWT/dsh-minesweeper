@@ -1,6 +1,6 @@
 # dsh-minesweeper
 
-DSH（DeepSeek Harness）右侧栏里的经典扫雷。纯客户端实现：零运行时依赖、零网络请求、零后端状态——React 由宿主 `window.__ModuleLoader__` 注入，成绩只存浏览器 `localStorage`。
+DSH（DeepSeek Harness）右侧栏里的经典扫雷。玩法与 UI 全在浏览器侧（零第三方运行时依赖，React 由宿主 `window.__ModuleLoader__` 注入）；v0.5 起成绩权威源在 host 侧文件 `$DSH_HOME/profiles/<profile>/dsh-minesweeper/stats.json`（经 `/api/dsh-minesweeper/stats` 读写），浏览器 `localStorage` 为降级镜像。
 
 ## 功能
 
@@ -15,19 +15,38 @@ DSH（DeepSeek Harness）右侧栏里的经典扫雷。纯客户端实现：零�
 - **终局停表**（v0.4）：经典规则——输/赢立即定格计时器，不再走秒；成绩行用真实 `<b>` 元素渲染（v0.3 曾把 HTML 字符串当文本，显示裸 `<b>`，v0.4 修复）。
 - **HUD**：剩余雷数（雷数−旗数，可为负）、计时（首点开格起计，**终局即停**，封顶 999s）、🙂/😵/😎 表情重开按钮。
 - **终局**：输=标出全部雷（点中者高亮）+ 错旗打叉；赢=自动给剩余雷插旗并停表（此时「剩余雷」= 雷数−旗数 = 0，属正确行为）。
-- **成绩**：按难度存 `{ bestMs, plays, wins }`（`localStorage` 键 `dsh-minesweeper/v1/<难度id>`）；「清空记录」二次确认。
+- **成绩**：按难度存 `{ bestMs, plays, wins }`——权威源为 host 侧文件 `$DSH_HOME/profiles/<profile>/dsh-minesweeper/stats.json`（`GET/PUT/DELETE /api/dsh-minesweeper/stats`，跨浏览器/跨重启保留），接口不可达时降级到 `localStorage`（键 `dsh-minesweeper/v1/<难度id>`）；「清空记录」二次确认。
+- **设置卡片**（v0.5，插件页配置区 `plugins.bundle.config`，key = 包名 `dsh-minesweeper`）：`flagModeDefault`「默认开启标记模式」。
 
 ## 安装（dev 环境 3082）
 
+一律 **tgz 安装**（2026-09-23 起，无 link 安装；每次重打包必须升版本号）：
+
 ```bash
 cd dsh-plugins/dsh-minesweeper
-bash scripts/install-to-dsh.sh          # 构建→冒烟→link 安装→验证（不重启服务）
-systemctl --user restart dsh-dev-web    # 需要时手动重启 3082（需自行确认）
+npm run check && npm pack               # 构建 + 门禁 + 测试 → 产出 dsh-minesweeper-<ver>.tgz
+dsh-dev plugin --profile web add /abs/path/to/dsh-minesweeper-<ver>.tgz
+systemctl --user restart dsh-dev-web    # 需要时由用户手动重启 3082
 ```
 
+`bash scripts/install-to-dsh.sh` 是上述流程的一键封装（构建→冒烟→重装→验证，**不重启服务**）。
+
 刷新 `http://127.0.0.1:3082` → 会话内展开右侧栏（会话头部的面板开关）→ 找到「🎮 扫雷」标签。
+`windows-lite` 用同一 tgz 流程，启动为手动（无 systemd）。
 
 > 标签**不会**随页面自动打开（设计决策 D2）：需要时经右侧栏指南/标签点入。
+
+## 环境支持矩阵（2026-09-26 双环境约定，总约定见 [`../docs/ENV-COMPATIBILITY.md`](../docs/ENV-COMPATIBILITY.md)）
+
+| 环境 | ubuntu-4090 | windows-lite |
+|---|---|---|
+| `dsh-minesweeper` | 全量 | 全量 |
+
+- `ubuntu-4090`（本机主力）：源码树 + systemd（3082/3083）；`npm run check` 全绿，3084 临时实例实测通过。
+- `windows-lite`（远程笔记本）：源码树 + dsh-dev 方式手动启动（无 systemd），同一 tgz 流程安装；
+  主目录经 `os.homedir()` 解析（v0.5.2 起，`src/shared/dsh-home.ts`），成绩文件落 `<DSH_HOME>/profiles/<profile>/dsh-minesweeper/stats.json`。
+- 双环境一致性来自「零环境依赖」：不触碰 MySQL/SQLite、Python/venv、本地模型服务；`src/` 无 POSIX-only 调用
+  （无 `spawn('bash')` / `/proc` / POSIX 信号 / 绝对 unix 路径假设），无 OS 分支。
 
 ## 开发
 
@@ -54,6 +73,11 @@ node test/runtime-probe.mjs     # （需 3084 临时实例）真实 harness 运�
 `0.5.2`（v0.5.2：跨平台主目录单源 `src/shared/dsh-home.ts`（`os.homedir()` 替代 `process.env.HOME`，修 Windows 上 `.dsh-dev` 变相对路径导致扫不到会话）+ 设置卡片迁到插件页配置区 `plugins.bundle.config`（key = 包名，旧槽 `settings.plugin.item` 已随上游 0.1.7-rc.1 退役）+ 构建脚本跨平台（tsc 改走共享锚点链、不再假设插件自带 `node_modules`）；v0.5.1：0.1.7 原生设置面（volatile 字段 + 插件自有 REST API，替代已移除的 settingsScope 服务）；v0.5：成绩迁 host 侧文件权威源 + localStorage 降级镜像、设置卡片「默认开启标记模式」；v0.4 终局停表 + 成绩行裸 `<b>` 修复；v0.3 全屏 + 可点性明暗重做 + HUD 标签 + 成绩语义；v0.2 标记模式/提示行；v0.1 经典玩法基线）。
 v0.6 候选：多难度独立计时对比、导出/导入成绩、在线跨机同步。
 
+## 仓库与分支
+
+唯一代码仓库 = `IamWWT/dsh-plugins`（private monorepo，2026-09-26 起全部自研代码的唯一仓）。
+分支模型：`main`（集成）/ `ubuntu`（agent 开发）/ `windows`（用户）。
+
 ## Windows / Ubuntu 本地构建
 
 两端都先运行 `npm install`，再运行 `npm run check`。构建工具和 Node 类型由本包声明，类型检查通过当前 Node 启动，文件导入使用文件 URL，支持 Windows 盘符。运行时仍由 DSH 提供共享服务。
@@ -62,4 +86,6 @@ v0.6 候选：多难度独立计时对比、导出/导入成绩、在线跨机�
 
 ## Windows / Ubuntu 共用目录
 
-本项目遵循 [DeepSeek 共用目录约定](../dsh-agent-presets/docs/DIRECTORY-LAYOUT.md)。管理根统一写作 `<DEEPSEEK_ROOT>`（`.../deepseek/`），历史部署记录不能视为当前机器状态；Bash/systemd 命令只适用于对应环境，配置文件中的路径须在本机解析。
+本项目遵循 [DeepSeek 共用目录约定](../dsh-agent-presets/docs/DIRECTORY-LAYOUT.md)。管理根统一写作 `<DEEPSEEK_ROOT>`（`.../deepseek/`），历史部署记录不能视为当前机器状态。
+Bash 与 `systemctl` 命令只适用于 `ubuntu-4090`（源码树 + systemd，3082/3083）；`windows-lite` 用源码树 + dsh-dev 方式手动启动（无 systemd），
+配置文件中的路径须在本机解析。工作区级文档在 `dsh-plugins/docs/` 与 `dsh-plugins/` 根 md。

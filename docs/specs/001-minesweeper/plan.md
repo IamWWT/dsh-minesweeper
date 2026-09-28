@@ -1,5 +1,12 @@
 # Plan — dsh-minesweeper 扫雷插件（001）
 
+## 当前状态
+
+- 文档性质：历史记录（v0.1 技术规划）
+- 对应版本：v0.5.3
+- 状态：历史记录，结论按当时口径（host 曾为空壳 `inject=[]`；v0.5 起 host 持有 `webServer`/`settings` 与 `/api/dsh-minesweeper/*` 路由，成绩权威源移到 host 侧文件）
+- 维护者：AI + 用户
+
 > 对应 spec：`spec.md`（已确认 D1–D4）。本文件是技术规划，任务拆解见 `tasks.md`。
 
 ## 1. 技术架构

@@ -1,5 +1,12 @@
 # TROUBLESHOOTING — dsh-minesweeper
 
+## 当前状态
+
+- 文档性质：操作手册（排障）
+- 对应版本：v0.5.3
+- 状态：有效（各条为已发生的真实坑，处置办法仍适用；v0.5.2 起 tsc 路径统一收敛到 `scripts/paths.mjs`）
+- 维护者：AI + 用户
+
 > 记录实际发生过的坑（现象→根因→修复→教训）。未发生的不要猜。
 
 ## 1. client 产物 esbuild 报 `Expected ":" but found ","`

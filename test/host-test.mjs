@@ -21,6 +21,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 const distDir = root + "/test/dist";
 
+/** 平台判据（仅用于构造与实现同风格的期望路径，不做能力分支）。 */
+const isWin = process.platform === "win32";
+
 /* ---------- 工具解析（与 scripts/build.mjs 同策略） ---------- */
 function loadTool(name) {
   const FALLBACK = buildFallbackDirs({ importMetaUrl: import.meta.url, envKeys: ["MSW_TOOLS_DIR"] });
@@ -138,7 +141,17 @@ check("state: clearStatsFile 删文件/不存在时成功", () => {
   assert.equal(clearStatsFile(stateFile), true); // 幂等
 });
 check("state: resolveStateDir 形如 $DSH_HOME/profiles/<profile>/dsh-minesweeper", () => {
-  assert.ok(resolveStateDir("/home/u/.dsh", "web").endsWith("/home/u/.dsh/profiles/web/dsh-minesweeper"));
+  // 跨平台（2026-09-28）：原断言写死 POSIX 分隔符，Windows 上必然失败。
+  // resolveStateDir 用模板串拼接（保留传入分隔符风格），故期望值也要按同样风格构造。
+  const home = isWin ? "C:\\Users\\u\\.dsh" : "/home/u/.dsh";
+  const want = isWin
+    ? `${home}/profiles/web/dsh-minesweeper`
+    : "/home/u/.dsh/profiles/web/dsh-minesweeper";
+  assert.equal(resolveStateDir(home, "web"), want);
+  // 尾斜杠归一（该函数显式 strip 结尾 /）
+  assert.equal(resolveStateDir(home + "/", "web"), want);
+  // profile 缺省回退 web
+  assert.equal(resolveStateDir(home, ""), want);
 });
 
 /* ---------- 假 req/res ---------- */

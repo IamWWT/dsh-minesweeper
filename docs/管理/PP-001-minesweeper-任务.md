@@ -172,4 +172,4 @@
 ## 文档任务（随各 T 同步）
 
 - `README.md`（T1 起占位，T6 后按实际行为定稿）、`CHANGELOG.md`、`AGENTS.md`（插件红线）、
-  `docs/REQUIREMENTS.md`、`docs/TROUBLESHOOTING.md`（T6 起记录实测问题）。
+  `docs/需求/BRD-业务需求说明书.md`、`docs/管理/RMP-风险管理.md`（T6 起记录实测问题）。

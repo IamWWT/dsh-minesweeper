@@ -74,10 +74,10 @@ node test/runtime-probe.mjs   # 需 3084 临时实例：真实 harness 运行时
 
 | 文件 | 一句话 |
 |---|---|
-| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | spec 001 的「需求→决策→实现→验收」映射 |
-| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | 实际踩过的坑（现象→根因→修复→教训） |
-| `docs/specs/001-minesweeper/` | SDD 三件套：决策 D1–D4 与验收 A1–A6 |
-| `docs/specs/20260925-experience/` | 布局/窄容器适配与键盘焦点优化规格 |
+| [`docs/需求/BRD-业务需求说明书.md`](`docs/需求/BRD-业务需求说明书.md`) | spec 001 的「需求→决策→实现→验收」映射 |
+| [`docs/管理/RMP-风险管理.md`](`docs/管理/RMP-风险管理.md`) | 实际踩过的坑（现象→根因→修复→教训） |
+| `docs/需求/` + `docs/管理/` 下同 id 文件 | SDD 三件套：决策 D1–D4 与验收 A1–A6 |
+| `docs/需求/` + `docs/管理/` 下同 id 文件 | 布局/窄容器适配与键盘焦点优化规格 |
 | `docs/screenshots/` | 临时实例（3084）验证截图 |
 | [AGENTS.md](AGENTS.md) | 本插件工程纪律（红线、命令、版本同步规则） |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录 |
@@ -88,4 +88,4 @@ node test/runtime-probe.mjs   # 需 3084 临时实例：真实 harness 运行时
 
 ## 附：仓库与共用目录
 
-唯一代码仓库 = `IamWWT/dsh-plugins`（private monorepo），本插件目录 `dsh-plugins/dsh-minesweeper/`；分支 `main`（集成）/ `ubuntu`（agent 开发）/ `windows`（用户）。遵循 [DeepSeek 共用目录约定](../dsh-agent-presets/docs/DIRECTORY-LAYOUT.md)，管理根统一写作 `<DEEPSEEK_ROOT>`（`.../deepseek/`）；`systemctl` 与 Bash 命令仅适用于 `ubuntu-4090`。
+唯一代码仓库 = `IamWWT/dsh-plugins`（private monorepo），本插件目录 `dsh-plugins/dsh-minesweeper/`；分支 `main`（集成）/ `ubuntu`（agent 开发）/ `windows`（用户）。遵循 [DeepSeek 共用目录约定](../../dsh-agent-presets/docs/DIRECTORY-LAYOUT.md)，管理根统一写作 `<DEEPSEEK_ROOT>`（`.../deepseek/`）；`systemctl` 与 Bash 命令仅适用于 `ubuntu-4090`。

@@ -9,6 +9,17 @@
 
 > 每个任务 = 一个逻辑改动。`done` = 该任务的验收条件；`验证` = 具体命令/操作。
 
+> 注（2026-10-13）：本文为历史留痕，以下几项已与现状不一致，正文不改：
+> ①T5/T7/T8 的「link 安装」为当时做法——现行安装唯一方式为 **tgz**（见 `../../README.md`「安装」；
+> `scripts/install-to-dsh.sh` 仍按源码目录 `add`，属遗留脚本）；
+> ②路径 `docs/screenshots/` 现为 `docs/测试/截图/`（下文已就地改指）；
+> ③`test/engine.bundle.mjs`、`src/client/react-shim.d.ts`、`probe/*.mjs` 已不在本仓库
+> （引擎打包逻辑已并入 `test/engine-test.mjs`；client 类型改由 `src/client/ui.ts` 内自带接口 +
+> `scripts/paths.mjs` 解析 `@types/node`；探针脚本未入库）；
+> ④`REQUIREMENTS.md` / `TROUBLESHOOTING.md` 现为 `docs/需求/BRD-业务需求说明书.md` / `docs/管理/RMP-风险管理.md`；
+> ⑤T12 记的 `settings.plugin.item` 槽位与 `settingsScope` 服务已随上游 0.1.7 退役，现注册在 `plugins.bundle.config`
+> （key = 包名）+ 插件自有 REST `/api/dsh-minesweeper/settings*`。
+
 ## 进度（2026-07-02 收口）
 
 - [x] T1 脚手架（build/typecheck 绿，lib/ 双产物）
@@ -25,17 +36,17 @@
   `dsh-trading-workbench-0.17.0.tgz` 依赖文件——从插件源目录补回）；**重启 + 刷新 3082 复验**
   留给用户执行或后续会话执行。**注意**：重启前 `dsh-dev-web` 进程仍持有旧代码，标签不会出现。）
 - [x] T8 v0.2（2026-09-14）：标记模式开关 + 操作提示行 + 明暗层级重做。3084 临时实例 A7 无头矩阵 22/22
-  （开/关标记模式 × 右键/长按/和弦/重开 + 明暗截图 v02-light/v02-dark 入 docs/screenshots/）；
+  （开/关标记模式 × 右键/长按/和弦/重开 + 明暗截图 v02-light/v02-dark 入 docs/测试/截图/）；
   3082 link 安装就位（profile 内即新 client.js），刷新页面即生效，未重启服务。
 - [x] T9 v0.3（2026-09-14）：全屏模式 + 可点性三态（光标/光影/悬停）+ HUD 数字标签 + 成绩语义。
   A8 矩阵 19/19（浅色 fresh）+ 18/18（深色）、A7 回归 22/22、build/typecheck/冒烟 24/引擎 40 全绿；
-  像素差验证全屏与深色主题生效；截图 v03-{light,fs-light,fs-dark,dark} 入 docs/screenshots/。
+  像素差验证全屏与深色主题生效；截图 v03-{light,fs-light,fs-dark,dark} 入 docs/测试/截图/。
 
 ## T1 脚手架（空壳可跑）
 
 - 改动文件：`package.json`、`tsconfig.json`、`tsconfig.client.json`、`cordis.patch.yml`、
   `scripts/build.mjs`、`scripts/typecheck.mjs`、`src/index.ts`、`LICENSE`、`.gitignore`
-- 说明：package.json 按 PLUGIN-DEV-STANDARD §2.2 模板（`dsh.bundle` + `dsh.client`）；
+- 说明：package.json 按插件工程规范 §2.2 模板（`dsh.bundle` + `dsh.client`；见 `dsh-plugins`: `docs/管理/CMP-插件开发规范.md` §2.2——原 `PLUGIN-DEV-STANDARD.md` 路径已不存在）；
   build.mjs 含产物门禁（host 断言 `name/apply/inject/VERSION`，client 断言
   `__ModuleLoader__` / 插件 id / `sidebarRightTabs` / `sidebar.right.pane.tab`）；
   src/index.ts 为占位 host（apply 空操作）；先放一个最小 client entry 让构建链跑通
@@ -85,18 +96,18 @@
 ## T6 临时实例验证（3084）
 
 - 操作：`DSH_HOME=$HOME/.dsh-minesweeper-test DSH profile web`（独立 home）+
-  `pnpm dsh web --port 3084 --no-open`（在 dsh-test/deepseek-harness 或主 harness 内），
+  `pnpm dsh web --port 3084 --no-open`（在管理根 `deepseek-harness/` 内），
   `dsh plugin --profile web add <源码目录>`（指向测试 DSH_HOME）。
 - 手测 A3/A4/A5：开标签→三档+自定义对局（开格/插旗/和弦/输/赢/重开）→ 成绩持久化 →
   明暗主题各看一眼 → 刷新页面。
-- done：spec A3/A4/A5 逐条勾掉并截图留档（docs/screenshots/）。
+- done：spec A3/A4/A5 逐条勾掉并截图留档（docs/测试/截图/）。
 - 验证：浏览器手工 + 截图证据。
 
 ## T7 交付 3082（需用户同意）
 
 - 操作：`dsh-dev plugin --profile web add <源码目录>`（3082）→ **征询用户同意后**
   `systemctl --user restart dsh-dev-web` → 刷新 3082 复验标签可用。
-- 文档：README/CHANGELOG/REQUIREMENTS/TROUBLESHOOTING 收口，`pnpm check` 终检。
+- 文档：`README.md` / `CHANGELOG.md` / `docs/需求/BRD-业务需求说明书.md`（原 REQUIREMENTS.md）/ `docs/管理/RMP-风险管理.md`（原 TROUBLESHOOTING.md）收口，`pnpm check` 终检。
 - done：3082 上标签可玩 + 文档齐全。
 
 ## T8 v0.2 标记模式 + 操作提示（2026-09-14，用户反馈驱动）
@@ -124,7 +135,7 @@
   "主题 token 承载光影"仅在深色主题成立——明暗层级必须叠加主题无关的中性 rgba 光影。
   全屏 wrap 用 `fit-content` 会导致子元素百分比宽循环塌缩，必须给 wrap 定宽。
 - done：构建+双 tsconfig+冒烟 24+引擎 40 全绿；3084 A8 19/19（浅色）+18/18（深色）、
-  A7 回归 22/22；像素差验证（全屏 0.096 显著差异 / 深色 0.998 全幅）；截图入 docs/screenshots/。
+  A7 回归 22/22；像素差验证（全屏 0.096 显著差异 / 深色 0.998 全幅）；截图入 docs/测试/截图/。
 - 验证：`node scripts/build.mjs && node test/smoke-test.mjs` + 3084 A8/A7 无头矩阵。
 
 ## T10 v0.4 成绩行裸 `<b>` 修复 + 终局停表（2026-09-14，用户反馈驱动）
@@ -141,7 +152,7 @@
   3084 实例须在 rebuild 后**重启**（启动时缓存 client bundle），且 nohup 起的进程会随命令沙箱消亡，
   必须用常驻后台 job 启动。
 - done：构建+双 tsconfig+冒烟 24+引擎 40 全绿；3084（重启后新 token）A8 浅色 fresh 21/21 +
-  深色 20/20 + A7 回归 22/22；截图 `v04-*.png` 入 docs/screenshots/；文档四件套收口。
+  深色 20/20 + A7 回归 22/22；截图 `v04-*.png` 入 docs/测试/截图/；文档四件套收口。
 - 验证：`node scripts/build.mjs && node test/smoke-test.mjs` + 3084 A8/A7 无头矩阵。
 
 ## T11 v0.5 host 侧成绩持久化（2026-09-14，用户确认开工）

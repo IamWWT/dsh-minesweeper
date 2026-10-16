@@ -1,6 +1,6 @@
 ## 0.5.3 — 2026-09-25
 
-改进插件页面布局、窄容器适配与键盘焦点；具体范围和验证见 docs/specs/20260925-experience/。
+改进插件页面布局、窄容器适配与键盘焦点；具体范围和验证见 `docs/需求/BRD-20260925-experience.md` 与 `docs/管理/PP-20260925-experience-计划.md`（原 `docs/specs/20260925-experience/` 目录已不存在）。
 
 # Changelog
 
@@ -105,7 +105,7 @@
 - 构建 + 双 tsconfig + 冒烟 24 项 + 引擎 40/40 全绿。
 - 3084 临时实例（重启取新 token）：A8 浅色 fresh 21/21（徽章 v0.4.0 / F15 无裸 `<b>` / F16 用时定格）
   + A8 深色 20/20 + A7 回归 22/22。
-- 截图：`docs/screenshots/v04-{light,fs-light,fs-dark,dark}.png`。
+- 截图：`docs/测试/截图/v04-{light,fs-light,fs-dark,dark}.png`。
 
 ## [0.3.0] - 2026-09-14
 
@@ -128,7 +128,7 @@
 - 构建+双 tsconfig+冒烟 24 项+引擎 40/40 全绿。
 - 3084 临时实例：A7 回归 22/22（含新光影的 R4/R5/R6 明暗断言）；A8 v0.3 矩阵 19/19（浅色 fresh）
   + 18/18（深色）：全屏进出（按钮/Esc）、全屏内开格、光标三态、表头标签、全屏棋盘适配、成绩新语义。
-- 截图：`docs/screenshots/v03-{light,fs-light,fs-dark,dark}.png`。
+- 截图：`docs/测试/截图/v03-{light,fs-light,fs-dark,dark}.png`。
 
 ## [0.2.0] - 2026-09-14
 

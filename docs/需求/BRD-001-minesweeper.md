@@ -53,6 +53,9 @@
 - **页面加载不自动打开**（避免打扰主对话面），用户经侧栏「+」→ 指南页条目点入；
   是否改为自动打开见 D2。
 
+> 注（2026-10-13）：上方占用表为当时核对结果；现行 3082 profile 实装清单中已无 `dsh-troubleshoot-workbench`（`troubleshoot`）与 `dsh-personal-workbench`。
+> guide order 41 仍为本插件占用（`src/client/entry.ts`）。
+
 ### 棋盘与规则（经典 Windows 扫雷规则）
 
 - 难度：入门 9×9/10、进阶 16×16/40、专家 30×16/99，外加「自定义」
@@ -88,6 +91,10 @@
 
 ### 最佳成绩（D4 已按假设处理：localStorage）
 
+> 注（2026-10-13）：当前实现已变更为下文（v0.5 起成绩权威源在 host 侧文件，localStorage 仅降级镜像；
+> 键为按难度分键 `dsh-minesweeper/v1/<难度id>`），见 `../../README.md`「成绩与设置」与
+> `BRD-业务需求说明书.md` R5/假设 D；本段保留 spec 成文时的占位写法。
+
 - 键：`dsh-minesweeper:stats.v1`，按难度存 `{ bestTimeMs, plays, wins }`；
 - 界面展示当前难度最佳时间 + 总胜局；「清空记录」按钮二次确认（confirm()）。
 
@@ -119,6 +126,10 @@
 - 回滚：`dsh-dev plugin --profile web rm dsh-minesweeper`（开发期 link 安装）；
 - 不触碰 3082：S1–S4 全程只在临时实例进行（红线：未发布改动禁止上 3082）。
 
+> 注（2026-10-13）：§4 尾注与 §5 S5/回滚中的「link 安装」为当时做法；现行安装唯一方式为 **tgz**
+> （`pnpm check && npm pack` → `DSH_HOME=~/.dsh-dev pnpm dsh plugin --profile web add <tgz>`，见
+> `../../README.md`「安装」）。重启方式不变（`systemctl --user restart dsh-dev-web`，需用户同意）。
+
 ## 6. 决策点（已确认）
 
 | # | 决策点 | 候选 | 结论（2026-09-14 用户确认） |
@@ -146,6 +157,11 @@
 |---|---|---|
 | D6 | 成绩持久化升级 | **host 侧文件为权威源**：`$DSH_HOME/profiles/<profile>/dsh-minesweeper/stats.json`，经宿主 HTTP 路由 `/api/dsh-minesweeper/*` 读写（`inject += ["webServer","settings"]`，`ctx.webServer.register` 注册，参照 dsh-scheduled-send 模式）；浏览器 `localStorage` 降级为**离线镜像/降级源**（API 不可达时继续可玩，恢复后以 host 为准）。效果：同一机器上成绩跨浏览器/跨 profile/跨重启保留（原"跨会话排行榜"诉求的实际解法）。 |
 | D7 | 设置卡片 | 设置页 `settings.plugin.item`（key = 命名空间 `dsh-minesweeper`）小卡片：唯一项「默认开启标记模式」（boolean，schema 走 `@deepseek-ai/schemastery`，命名空间经 `ctx.settings.register` 注册，参照 dsh-global-auth / dsh-sidebar-hub）。游戏挂载时读取该设置决定标记模式初始态；HUD 内开关仍是会话内开关，二者互不覆盖。 |
+
+> 注（2026-10-13）：D7 的落点当前实现已变更——设置卡片现注册在**插件页配置区 `plugins.bundle.config`**
+> （keyed，key = **包名** `dsh-minesweeper`），数据面为插件自有 REST `/api/dsh-minesweeper/settings*`；
+> `settings.plugin.item` 槽位与 `settingsScope` 服务已随上游 0.1.7 退役（注册到退役槽位不报错但永不渲染）。
+> 见 `../../README.md`「成绩与设置」、`../../CHANGELOG.md` [0.5.1]/[0.5.2]、`../../AGENTS.md` 红线 6。
 
 ### 假设表（v0.5，未单独提问的低危项，记录在案）
 

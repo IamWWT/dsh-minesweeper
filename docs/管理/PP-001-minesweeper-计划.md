@@ -7,7 +7,7 @@
 - 状态：历史记录，结论按当时口径（host 曾为空壳 `inject=[]`；v0.5 起 host 持有 `webServer`/`settings` 与 `/api/dsh-minesweeper/*` 路由，成绩权威源移到 host 侧文件）
 - 维护者：AI + 用户
 
-> 对应 spec：`spec.md`（已确认 D1–D4）。本文件是技术规划，任务拆解见 `tasks.md`。
+> 对应 spec：`../需求/BRD-001-minesweeper.md`（已确认 D1–D4；D5–D7 见该文件 §8）。本文件是技术规划，任务拆解见 `PP-001-minesweeper-任务.md`。
 
 ## 1. 技术架构
 
@@ -57,7 +57,11 @@ dsh-minesweeper/
 | 主题 | 仅 `--dsw-alias-*` / `--dsw-elevation-*` token；8 个数字色映射 8 个现成 token（brand/success/error/business/warn/link/label-primary/warn-secondary） | 红线：禁止写死色值；明暗主题自动适配 |
 | 触屏 | 长按 ≥350ms 插旗（pointer 事件，位移>10px 取消） | 无右键设备的兜底 |
 | 无 JSX | `.ts` + `createElement` 显式调用 | 与 personal-workbench 一致，tsconfig 无需 jsx 配置 |
-| 类型环境 | client 自带 `react-shim.d.ts`（最小 React 类型面） | 不依赖 `@types/react` 安装，类型检查自包含 |
+| 类型环境 | client 类型来自源码内自带的最小 React 接口（`src/client/ui.ts` 的 `GameReact` 等） | 不依赖插件本地 `node_modules`；类型检查自包含 |
+
+> 注（2026-10-13）：本行原写「client 自带 `react-shim.d.ts`（最小 React 类型面）」——该文件已不在本仓库；
+> 现状为 `src/client/ui.ts` 内声明 `GameReact` 等接口，`@types/node` 由 `scripts/paths.mjs` 的 `findTypeRoots`
+> 从 harness / DSH profile 依赖层解析（`tsconfig.client.json` 的 `types: ["node"]`）。
 
 ## 3. 状态模型
 
@@ -74,4 +78,4 @@ dsh-minesweeper/
 | 8 数字色的 token 近似与经典色不完全一致 | 可接受（语义可辨即可）；映射表写在 css.ts 注释里 |
 | 长按与滚动/拖拽手势冲突 | 350ms 阈值 + 位移取消 + `touch-action: manipulation` 禁双击缩放 |
 | 临时实例验证时 3082 与 3084 并存 | 独立 DSH_HOME（`~/.dsh-minesweeper-test`）+ 独立端口 3084，全程不碰 3082 |
-| 同版本号 tgz 缓存坑 | 开发期一律源码 link 安装；tgz 仅稳定版且必升版本号 |
+| 同版本号 tgz 缓存坑 | 安装一律走 tgz 且必须升版本号（见 `../../README.md`「安装」）：同版本重打包时 pnpm 按 integrity 判「已最新」不重解压 |
